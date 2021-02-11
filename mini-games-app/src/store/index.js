@@ -29,10 +29,16 @@ export default new Vuex.Store({
       },
       {
         name: "Drawing game",
-        description:
-          "The rules of the game are simple. You need to swap them in a way that it forms the correct image. The number of steps will be counted. So, you may wish to think and try to do it in minimum possible steps.",
+        description: " ",
         image: "drawing_game/drawing.jpg",
         path: "/drawingGame",
+      },
+      {
+        name: "Repeat sequence",
+        description:
+          "Try to remember shown sequence and repeat after it disappear. There are two game modes: first where sequence order is respected and second where you only have to repeat pattern without numbers. Lets find out how far with your memory you can get",
+        image: "memory_sequence/sequence.jpg",
+        path: "/memorySequence",
       },
     ],
   },

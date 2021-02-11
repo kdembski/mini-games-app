@@ -3,7 +3,7 @@
     <div id="nav">
       <div class="container-xl">
         <router-link class="custom-router-link" to="/">Home</router-link>
-        <router-link class="custom-router-link" to="/about">About</router-link>
+        <router-link class="custom-router-link" to="/gamesList">Games</router-link>
       </div>
     </div>
 
@@ -42,6 +42,17 @@
       background: $primaryGrey;
       color: $primaryGreen;
     }
+  }
+}
+
+@media (max-width: 992px) {
+  #nav {
+    padding: 20px 0px;
+  }
+}
+@media (max-width: 576px) {
+  #nav {
+    padding: 15px 0px;
   }
 }
 </style>

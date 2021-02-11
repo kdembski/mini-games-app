@@ -12,6 +12,7 @@
       class="example-games"
       :style="{
         backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
+        overflow: overflow,
       }"
     >
       <div
@@ -21,12 +22,12 @@
       >
         <example-game
           :game="gamesArray[exampleGameIndex1]"
-          class="mb-3 mb-xl-0"
+          class="mb-3 mb-md-0"
           :exampleGameIndex="exampleGameIndex1"
         ></example-game
         ><example-game
           :game="gamesArray[exampleGameIndex2]"
-          class="mb-3 mb-xl-0"
+          class="mb-3 mb-md-0"
           :exampleGameIndex="exampleGameIndex2"
         ></example-game
         ><example-game
@@ -87,6 +88,7 @@ export default {
       intervalCounter: 0,
       changeExampleGameTimer: "",
       exampleGameIsChanging: true,
+      overflow: "initial",
     };
   },
   mounted() {
@@ -107,15 +109,27 @@ export default {
     startChangeExampleGameTimer() {
       window.clearInterval(this.changeExampleGameTimer);
       this.changeExampleGameTimer = setInterval(() => {
-        if (this.exampleGameIsChanging) {
+        if (this.exampleGameIsChanging && !document.hidden) {
           if (this.intervalCounter == 0) {
             this.exampleGameIndex1 = this.randExampleGameIndex();
+            this.overflow = "hidden";
+            setTimeout(() => {
+              this.overflow = "initial";
+            }, 900);
             this.intervalCounter++;
           } else if (this.intervalCounter == 1) {
             this.exampleGameIndex2 = this.randExampleGameIndex();
+            this.overflow = "hidden";
+            setTimeout(() => {
+              this.overflow = "initial";
+            }, 900);
             this.intervalCounter++;
           } else if (this.intervalCounter == 2) {
             this.exampleGameIndex3 = this.randExampleGameIndex();
+            this.overflow = "hidden";
+            setTimeout(() => {
+              this.overflow = "initial";
+            }, 900);
             this.intervalCounter++;
           } else if (this.intervalCounter == 3) {
             this.intervalCounter = 0;
@@ -148,10 +162,10 @@ export default {
 }
 .example-games {
   background-color: $primaryGreen;
-  background-blend-mode: multiply;
+  background-blend-mode: darken;
   background-size: cover;
-  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.8),
-    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.5),
+    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.5);
   padding: 30px 0px;
   background-position-y: 55%;
 }
@@ -178,12 +192,6 @@ export default {
 }
 
 @media (max-width: 1200px) {
-  .example-games-div {
-    display: block;
-  }
-  .example-games {
-    padding: 0;
-  }
   .home-introduction-header {
     font-size: 70px;
   }
@@ -205,6 +213,12 @@ export default {
   }
   .technologies-item {
     width: calc(calc(100% / 2) - 20px);
+  }
+  .example-games-div {
+    display: block;
+  }
+  .example-games {
+    padding: 0;
   }
 }
 @media (max-width: 576px) {

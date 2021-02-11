@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="hangman-header py-3 py-xl-5">
+    <div class="hangman-header-div py-3 py-xl-5">
       <div class="container-xl">
         <div class="hangman-name">{{ gameDetails.name }}</div>
         <div class="hangman-description">
@@ -8,116 +8,184 @@
         </div>
       </div>
     </div>
-    <div
-      class="hangman py-3 py-xl-5"
-      :style="{
-        backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
-      }"
-    >
-      <div class="container-xl">
-        <transition-group
-          name="hangman-letter-list-transition"
-          class="hangman-word"
-          :class="{ 'game-won': gameWon }"
+    <transition name="transition-slide-down" mode="out-in">
+      <div v-if="languageSelected" key="hangman">
+        <div
+          class="hangman py-3 py-xl-5"
+          :style="{
+            backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
+          }"
         >
-          <div
-            v-for="(letter, index) in lettersArray"
-            :key="index"
-            class="hangman-letter-container"
-          >
-            <div class="hangman-letter-div" :class="{ 'game-won': gameWon }">
-              <transition name="hangman-letter-transition">
-                <div
-                  class="hangman-letter"
-                  :class="{
-                    hidden: letter.isHidden,
-                    correct: letter.isCorrect,
-                  }"
-                  :key="letter.isHidden"
-                >
-                  {{ letter.letter }}
-                </div>
-              </transition>
+          <div class="container-xl">
+            <div class="hangman-header mb-3 mb-xl-5">
+              Pick a letter
             </div>
-          </div>
-        </transition-group>
+            <transition-group
+              name="hangman-letter-list-transition"
+              class="hangman-word"
+              :class="{ 'game-won': gameWon }"
+            >
+              <div
+                v-for="(letter, index) in lettersArray"
+                :key="index"
+                class="hangman-letter-container"
+              >
+                <div
+                  class="hangman-letter-div"
+                  :class="{ 'game-won': gameWon }"
+                >
+                  <transition name="hangman-letter-transition">
+                    <div
+                      class="hangman-letter"
+                      :class="{
+                        hidden: letter.isHidden,
+                        correct: letter.isCorrect,
+                      }"
+                      :key="letter.isHidden"
+                    >
+                      {{ letter.letter }}
+                    </div>
+                  </transition>
+                </div>
+              </div>
+            </transition-group>
 
-        <div class="row pt-3 pt-xl-5">
-          <div class="col-xl-8 p-0 d-flex align-items-center">
-            <div class="hangman-keyboard">
-              <div class="row d-flex justify-content-center">
-                <div
-                  v-for="index in 10"
-                  :key="index"
-                  class="hangman-keyboard-key"
-                  :class="keyboard[index - 1].isPressed ? 'pressed' : ''"
-                  @click="keyPressed(keyboard[index - 1])"
-                >
-                  {{ keyboard[index - 1].letter }}
+            <div class="row pt-3 pt-xl-5">
+              <div class="col-xl-8 p-0 d-flex align-items-center">
+                <div class="hangman-keyboard">
+                  <div class="row d-flex justify-content-center">
+                    <div
+                      v-for="index in 10"
+                      :key="index"
+                      class="hangman-keyboard-key"
+                      :class="keyboard[index - 1].isPressed ? 'pressed' : ''"
+                      @click="keyPressed(keyboard[index - 1])"
+                    >
+                      {{ keyboard[index - 1].letter }}
+                    </div>
+                  </div>
+                  <div class="row d-flex justify-content-center">
+                    <div
+                      v-for="index in 9"
+                      :key="index"
+                      class="hangman-keyboard-key"
+                      :class="
+                        keyboard[10 + index - 1].isPressed ? 'pressed' : ''
+                      "
+                      @click="keyPressed(keyboard[10 + index - 1])"
+                    >
+                      {{ keyboard[10 + index - 1].letter }}
+                    </div>
+                  </div>
+                  <div class="row d-flex justify-content-center">
+                    <div
+                      v-for="index in 7"
+                      :key="index"
+                      class="hangman-keyboard-key"
+                      :class="
+                        keyboard[19 + index - 1].isPressed ? 'pressed' : ''
+                      "
+                      @click="keyPressed(keyboard[19 + index - 1])"
+                    >
+                      {{ keyboard[19 + index - 1].letter }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="selectedLanguage == 'pl'"
+                    class="row d-flex justify-content-center"
+                  >
+                    <div
+                      v-for="index in 9"
+                      :key="index"
+                      class="hangman-keyboard-key"
+                      :class="
+                        keyboardSignsPL[index - 1].isPressed ? 'pressed' : ''
+                      "
+                      @click="keyPressed(keyboardSignsPL[index - 1])"
+                    >
+                      {{ keyboardSignsPL[index - 1].letter }}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="row d-flex justify-content-center">
-                <div
-                  v-for="index in 9"
-                  :key="index"
-                  class="hangman-keyboard-key"
-                  :class="keyboard[10 + index - 1].isPressed ? 'pressed' : ''"
-                  @click="keyPressed(keyboard[10 + index - 1])"
-                >
-                  {{ keyboard[10 + index - 1].letter }}
+              <div
+                class="col-xl-4 p-0 d-flex align-items-center justify-content-center pl-0 pl-xl-4 pt-3 pt-xl-0"
+              >
+                <div class="hangman-figure swing">
+                  <div v-for="index in 12" :key="index">
+                    <div
+                      :class="'hangman-figure-element e' + index"
+                      :style="
+                        missesCounter > index - 1 ? 'opacity: 1' : 'opacity:0'
+                      "
+                      :key="index"
+                    ></div>
+                  </div>
                 </div>
-              </div>
-              <div class="row d-flex justify-content-center">
-                <div
-                  v-for="index in 7"
-                  :key="index"
-                  class="hangman-keyboard-key"
-                  :class="keyboard[19 + index - 1].isPressed ? 'pressed' : ''"
-                  @click="keyPressed(keyboard[19 + index - 1])"
-                >
-                  {{ keyboard[19 + index - 1].letter }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="col-xl-4 p-0 d-flex align-items-center justify-content-center pl-0 pl-xl-4 pt-3 pt-xl-0"
-          >
-            <div class="hangman-figure swing">
-              <div v-for="index in 12" :key="index">
-                <div
-                  :class="'hangman-figure-element e' + index"
-                  :style="
-                    missesCounter > index - 1 ? 'opacity: 1' : 'opacity:0'
-                  "
-                  :key="index"
-                ></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <div v-else key="selectLanguage">
+        <div
+          class="hangman-select-language py-3 py-xl-5"
+          :style="{
+            backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
+          }"
+        >
+          <div class="container-xl">
+            <div class="hangman-language-header mb-3 mb-xl-5">
+              Select language
+            </div>
+            <div class="hangman-language-div">
+              <div
+                :style="{
+                  backgroundImage:
+                    'url(' + require('../assets/hangman/plflag.png') + ')',
+                }"
+                class="hangman-language"
+                @click="selectLanguage('pl')"
+              >
+                pl
+              </div>
+              <div
+                :style="{
+                  backgroundImage:
+                    'url(' + require('../assets/hangman/gbflag.png') + ')',
+                }"
+                class="hangman-language"
+                @click="selectLanguage('eng')"
+              >
+                eng
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
     <div class="hangman-instructions py-3 py-xl-5">
       <div class="container-xl">
         <div class="hangman-instructions-div">
           <div class="hangman-instructions-header ">How to play</div>
           <div class="hangman-instructions-text ">
-            Choose letter you want to guess by clicking it on keyboard displayed
-            above. To win you need to find all of word's letters. Be careful
-            cause with every wrong guess one part of hangman will appear. If the
-            hangman will be fully completed you'll lose.
+            Choose language of word you will be guessing by clicking on correct
+            rectangle above. Letters type by clicking on keyboard. To win you
+            need to find all of word's letters. Be careful cause with every
+            wrong guess one part of hangman will appear. If the hangman will be
+            fully completed you'll lose.
           </div>
         </div>
       </div>
     </div>
-    <transition name="hangman-transition-game-won-modal">
+    <transition name="hangman-transition-game-won-overlay">
       <div v-if="gameWon" class="modal-overlay">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">Congratulations, you've won!</div>
             <div class="modal-body ">
-              You've guessed the whole word. Good job!
+              Good job! You've guess it. Here is the word you competed with:
+              {{ randomWord }}
             </div>
             <div class="modal-footer">
               <div class="button" @click="pageReload">
@@ -128,13 +196,13 @@
         </div>
       </div>
     </transition>
-    <transition name="hangman-transition-game-lost-modal">
+    <transition name="hangman-transition-game-lost-overlay">
       <div v-if="gameLost" class="modal-overlay">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">Upss, you've lost!</div>
             <div class="modal-body ">
-              You are hanging on a rope. The word that beat you was:
+              You've been hanged. The word that beat you was:
               <br />
               <p style="font-size:40px; font-weight: 300">
                 {{ randomWord }}
@@ -153,11 +221,16 @@
 </template>
 
 <script>
+import wordsListPL from "!raw-loader!../assets/wyrazy.txt";
 export default {
   name: "Hangman",
   data() {
     return {
-      wordsList: require("word-list-json"),
+      languageSelected: false,
+      selectedLanguage: "",
+      wordsListENG: require("word-list-json"),
+      wordsListPL: [],
+      wordsList: [],
       randomWord: "",
       lettersArray: [],
       keyboard: [
@@ -188,13 +261,24 @@ export default {
         { letter: "n", isPressed: false },
         { letter: "m", isPressed: false },
       ],
+      keyboardSignsPL: [
+        { letter: "ą", isPressed: false },
+        { letter: "ę", isPressed: false },
+        { letter: "ś", isPressed: false },
+        { letter: "ć", isPressed: false },
+        { letter: "ż", isPressed: false },
+        { letter: "ź", isPressed: false },
+        { letter: "ń", isPressed: false },
+        { letter: "ł", isPressed: false },
+        { letter: "ó", isPressed: false },
+      ],
       missesCounter: 0,
       gameWon: false,
       gameLost: false,
     };
   },
   created() {
-    this.getRandomWord();
+    this.wordsListPL = wordsListPL.replace(/(\r\n|\n|\r)/gm, " ").split(" ");
   },
   methods: {
     getRandomWord() {
@@ -245,13 +329,29 @@ export default {
         this.keyboard.forEach((key) => {
           key.isPressed = true;
         });
+        this.keyboardSignsPL.forEach((key) => {
+          key.isPressed = true;
+        });
       }
       if (this.missesCounter >= 12) {
         this.gameLost = true;
         this.keyboard.forEach((key) => {
           key.isPressed = true;
         });
+        this.keyboardSignsPL.forEach((key) => {
+          key.isPressed = true;
+        });
       }
+    },
+    selectLanguage(language) {
+      if (language == "pl") {
+        this.wordsList = this.wordsListPL;
+      } else if (language == "eng") {
+        this.wordsList = this.wordsListENG;
+      }
+      this.languageSelected = true;
+      this.selectedLanguage = language;
+      this.getRandomWord();
     },
     pageReload() {
       this.gameWon = false;
@@ -259,6 +359,9 @@ export default {
       this.missesCounter = 0;
       this.lettersArray.length = 0;
       this.keyboard.forEach((key) => {
+        key.isPressed = false;
+      });
+      this.keyboardSignsPL.forEach((key) => {
         key.isPressed = false;
       });
       this.getRandomWord();
@@ -281,12 +384,13 @@ export default {
   margin-top: -20px;
   letter-spacing: 5px;
 }
+.hangman-select-language,
 .hangman {
   background-color: $primaryGreen;
-  background-blend-mode: multiply;
+  background-blend-mode: darken;
   background-size: cover;
-  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.8),
-    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.5),
+    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.5);
   background-position-y: 55%;
 }
 .hangman-instructions-text,
@@ -295,6 +399,42 @@ export default {
   font-size: 22px;
   font-weight: 100;
 }
+.hangman-language-div {
+  display: flex;
+  justify-content: space-evenly;
+}
+.hangman-language {
+  @include flex-center;
+  width: 400px;
+  height: 200px;
+  background-size: contain;
+  background-color: $primaryGrey;
+  background-blend-mode: multiply;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  color: $primaryGreen;
+  font-size: 100px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.hangman-language-header,
+.hangman-header {
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  background: rgba($primaryGrey, 0.6);
+  color: $primaryGreen;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  padding: 10px 20px;
+}
+
 .hangman-word {
   position: relative;
   display: flex;
@@ -310,7 +450,7 @@ export default {
 }
 @keyframes hangman-letter-animation {
   50% {
-    transform: translateY(-40px);
+    transform: translateY(-25%);
   }
 }
 .hangman-letter-container {
@@ -320,7 +460,7 @@ export default {
 }
 .hangman-letter-div {
   position: relative;
-  height: 150px;
+  height: 160px;
   width: 100px;
   perspective: 500px;
 }
@@ -330,7 +470,7 @@ export default {
   height: 100%;
   background: $primaryGrey;
   color: $primaryGreen;
-  font-size: 130px;
+  font-size: 110px;
   font-weight: 1000;
   text-transform: uppercase;
   user-select: none;
@@ -342,6 +482,7 @@ export default {
   &.correct {
     background-color: $primaryGreen;
     color: $primaryGreen;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
   }
 }
 .hangman-letter-list-transition {
@@ -371,15 +512,15 @@ export default {
   }
   &-enter-active {
     position: absolute;
-    transition: transform 0.3s 0.3s cubic-bezier(0.2, 0.4, 0.6, 0.8);
+    transition: transform 0.3s 0.3s linear;
   }
   &-leave-active {
     position: absolute;
-    transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.8, 0.6);
+    transition: transform 0.3s linear;
   }
 }
 .hangman-keyboard {
-  background: rgba($primaryGrey, 0.5);
+  background: rgba($primaryGrey, 0.6);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
   padding: 5px;
   width: 100%;
@@ -394,7 +535,7 @@ export default {
   font-size: 40px;
   font-weight: 800;
   text-transform: uppercase;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
   user-select: none;
   transition: all 0.1s ease-in-out;
   cursor: pointer;
@@ -413,13 +554,13 @@ export default {
   }
 }
 
-$hangman-figure-transition-duration: 3s;
+$hangman-figure-transition-duration: 2s;
 
 .hangman-figure {
   position: relative;
   height: 450px;
   width: 346px;
-  background: rgba($primaryGrey, 0.5);
+  background: rgba($primaryGrey, 0.6);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
   &.swing {
     & .hangman-figure-element {
@@ -450,7 +591,7 @@ $hangman-figure-transition-duration: 3s;
 .hangman-figure-element {
   position: absolute;
   background: $primaryGrey;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
   animation-timing-function: linear;
   transition: opacity 0.2s ease-in-out;
   &.e1 {
@@ -516,7 +657,7 @@ $hangman-figure-transition-duration: 3s;
     height: 120px;
     z-index: 2;
     transform-origin: top;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
   }
   &.e9 {
     top: 135px;
@@ -612,27 +753,27 @@ $hangman-figure-transition-duration: 3s;
 }
 @keyframes animation-e11 {
   0% {
-    transform: translateX(-13px) rotate(3deg);
+    transform: translateX(-13px) rotate(2deg);
   }
   50% {
-    transform: translateX(13px) rotate(-13deg);
+    transform: translateX(13px) rotate(-12deg);
   }
   100% {
-    transform: translateX(-13px) rotate(3deg);
+    transform: translateX(-13px) rotate(2deg);
   }
 }
 @keyframes animation-e12 {
   0% {
-    transform: translateX(-13px) rotate(13deg);
+    transform: translateX(-13px) rotate(12deg);
   }
   50% {
-    transform: translateX(13px) rotate(-3deg);
+    transform: translateX(13px) rotate(-2deg);
   }
   100% {
-    transform: translateX(-13px) rotate(13deg);
+    transform: translateX(-13px) rotate(12deg);
   }
 }
-.hangman-transition-game-won-modal {
+.hangman-transition-game-won-overlay {
   &-enter {
     opacity: 0;
   }
@@ -641,12 +782,18 @@ $hangman-figure-transition-duration: 3s;
   }
   &-enter-active {
     transition: all 0.2s 2s ease-in-out;
+    & .modal-dialog {
+      transition: all 0.2s 5s ease-in-out;
+    }
   }
   &-leave-active {
     transition: all 0.2s ease-in-out;
+    & .modal-dialog {
+      transition: all 0.2s 5s ease-in-out;
+    }
   }
 }
-.hangman-transition-game-lost-modal {
+.hangman-transition-game-lost-overlay {
   &-enter {
     opacity: 0;
   }
@@ -667,13 +814,14 @@ $hangman-figure-transition-duration: 3s;
     margin: 0px 8px;
   }
   .hangman-letter-div {
-    height: 120px;
+    height: 130px;
     width: 80px;
     perspective: 400px;
   }
   .hangman-letter {
-    font-size: 100px;
+    font-size: 95px;
     font-weight: 1000;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
   }
 }
 @media (max-width: 1500px) {
@@ -682,13 +830,14 @@ $hangman-figure-transition-duration: 3s;
     margin: 0px 6px;
   }
   .hangman-letter-div {
-    height: 90px;
+    height: 100px;
     width: 60px;
     perspective: 300px;
   }
   .hangman-letter {
     font-size: 70px;
     font-weight: 1000;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
   }
 }
 @media (max-width: 1200px) {
@@ -708,9 +857,15 @@ $hangman-figure-transition-duration: 3s;
   .hangman-letter {
     font-size: 40px;
     font-weight: 1000;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
   }
 }
 @media (max-width: 992px) {
+  .hangman-language {
+    width: 300px;
+    height: 150px;
+    font-size: 80px;
+  }
 }
 @media (max-width: 768px) {
   .hangman-letter-container {
@@ -725,15 +880,26 @@ $hangman-figure-transition-duration: 3s;
   .hangman-letter {
     font-size: 30px;
     font-weight: 800;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.3);
   }
   .hangman-keyboard-key {
     height: 45px;
     width: 45px;
     margin: 3px;
     font-size: 35px;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
+  }
+  .hangman-language {
+    width: 200px;
+    height: 100px;
+    font-size: 60px;
   }
 }
 @media (max-width: 576px) {
+  .hangman-language-header,
+  .hangman-header {
+    font-size: 30px;
+  }
   .hangman-instructions-header,
   .hangman-name {
     font-size: 30px;
@@ -755,6 +921,7 @@ $hangman-figure-transition-duration: 3s;
   .hangman-letter {
     font-size: 25px;
     font-weight: 600;
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3);
   }
   .hangman-keyboard-key {
     height: 35px;
@@ -762,6 +929,12 @@ $hangman-figure-transition-duration: 3s;
     margin: 3px;
     font-size: 25px;
     font-weight: 800;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  }
+  .hangman-language {
+    width: 120px;
+    height: 60px;
+    font-size: 40px;
   }
 }
 @media (max-width: 450px) {
@@ -770,17 +943,18 @@ $hangman-figure-transition-duration: 3s;
     margin: 0px 2px;
   }
   .hangman-letter-div {
-    height: 24px;
+    height: 26px;
     width: 15px;
     perspective: 100px;
   }
   .hangman-letter {
-    font-size: 20px;
+    font-size: 18px;
   }
   .hangman-keyboard-key {
     height: 24px;
     width: 24px;
     margin: 2px;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
     font-size: 20px;
     font-weight: 600;
   }

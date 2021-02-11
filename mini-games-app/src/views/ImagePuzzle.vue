@@ -13,11 +13,13 @@
         <div
           class="choose-image py-3 py-xl-5"
           :style="{
-            backgroundImage:
-              'url(' + require('../assets/image_puzzle/background.jpg') + ')',
+            backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
           }"
         >
           <div class="container-xl">
+            <div class="choose-image-header mb-3 mb-xl-5">
+              Choose Image
+            </div>
             <div class="choose-image-div">
               <div
                 class="choose-image-div-item"
@@ -49,30 +51,22 @@
             </div>
           </div>
         </div>
-        <div class="image-puzzle-instructions py-3 py-xl-5">
-          <div class="container-xl">
-            <div class="image-puzzle-instructions-header">
-              How to play
-            </div>
-            <div class="image-puzzle-instructions-text">
-              Choose image you want to solve from above. Image will be split
-              into 16 even pieces and then shuffled. To move certain piece just
-              click on it. Remeber that steps are counted so make every move to
-              be as efficient as possible.
-            </div>
-          </div>
-        </div>
       </div>
 
       <div v-else key="image-puzzle">
         <div
           class="image-puzzle py-3 py-xl-5"
           :style="{
-            backgroundImage:
-              'url(' + require('../assets/image_puzzle/background.jpg') + ')',
+            backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
           }"
         >
-          <div class="container-xl d-flex justify-content-center">
+          <div class="container-xl">
+            <div class="image-puzzle-game-header ">
+              Solve the puzzle
+            </div>
+          </div>
+
+          <div class="container-xl d-flex justify-content-center my-3 my-xl-5">
             <div class="image-puzzle-div">
               <div v-for="row in 4" :key="row" class="row">
                 <div
@@ -111,8 +105,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="steps-counter py-3 py-xl-5">
           <div class="container-xl">
             <div class="steps-counter-div">
               Steps counter: {{ stepsNumber }}
@@ -121,6 +113,20 @@
         </div>
       </div>
     </transition>
+    <div class="image-puzzle-instructions py-3 py-xl-5">
+      <div class="container-xl">
+        <div class="image-puzzle-instructions-header">
+          How to play
+        </div>
+        <div class="image-puzzle-instructions-text">
+          Choose image you want to solve. The image will be split into 16 even
+          pieces and then shuffled. To move certain piece just click on it.
+          Remeber that steps are counted so make every move to be as efficient
+          as possible.
+        </div>
+      </div>
+    </div>
+
     <transition name="transition-fade">
       <div v-if="showImageFinishedModal" class="modal-overlay">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -334,11 +340,24 @@ export default {
 .image-puzzle,
 .choose-image {
   background-color: $primaryGreen;
-  background-blend-mode: multiply;
+  background-blend-mode: darken;
   background-size: cover;
-  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.8),
-    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.5),
+    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.5);
   background-position-y: 55%;
+}
+.steps-counter-div,
+.choose-image-header,
+.image-puzzle-game-header {
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  background: rgba($primaryGrey, 0.6);
+  color: $primaryGreen;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  padding: 10px 20px;
 }
 .choose-image-div {
   display: flex;
@@ -376,16 +395,6 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: scale-down;
-}
-.steps-counter {
-  background: $primaryGrey;
-}
-.steps-counter-div {
-  @include flex-center;
-  color: $primaryGreen;
-  font-size: 40px;
-  font-weight: 800;
-  letter-spacing: 5px;
 }
 .image-puzzle-div {
   background: rgba($primaryGrey, 0.6);
@@ -478,6 +487,8 @@ export default {
     width: 80px;
     height: 80px;
   }
+  .choose-image-header,
+  .image-puzzle-game-header,
   .steps-counter-div {
     font-size: 25px;
     letter-spacing: 3px;

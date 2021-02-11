@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="memory-game-header py-3 py-xl-5">
+    <div class="memory-game-header-div py-3 py-xl-5">
       <div class="container-xl">
         <div class="memory-game-name">{{ gameDetails.name }}</div>
         <div class="memory-game-description">
@@ -14,35 +14,22 @@
         <div
           class="memory-game-select-number py-3 py-xl-5"
           :style="{
-            backgroundImage:
-              'url(' + require('../assets/memory_game/background.jpg') + ')',
+            backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
           }"
         >
           <div class="container-xl">
-            <div class="memory-game-select-number-div">
-              <div class="memory-game-number" @click="selectCardsNumber(12)">
-                12
-              </div>
-              <div class="memory-game-number" @click="selectCardsNumber(16)">
-                16
-              </div>
-              <div class="memory-game-number" @click="selectCardsNumber(20)">
-                20
-              </div>
+            <div class="memory-game-select-number-header mb-3 mb-xl-5">
+              Select number of cards
             </div>
-          </div>
-        </div>
-        <div class="memory-game-instructions py-3 py-xl-5">
-          <div class="container-xl">
-            <div class="memory-game-instructions-div">
-              <div class="memory-game-instructions-header ">How to play</div>
-              <div class="memory-game-instructions-text ">
-                Pick number of cards you want to play with from rectangles
-                displayed above. Set of cards face down will appear. To flip a
-                card just click on it. If you flip two cards in a row with the
-                same symbol on it, you will get a match and that pair of cards
-                will disappear. To finish the game you have to find all pairs.
-                Goodluck!
+            <div class="memory-game-select-number-div">
+              <div class="memory-game-number" @click="selectCardsNumber(18)">
+                18
+              </div>
+              <div class="memory-game-number" @click="selectCardsNumber(24)">
+                24
+              </div>
+              <div class="memory-game-number" @click="selectCardsNumber(30)">
+                30
               </div>
             </div>
           </div>
@@ -52,11 +39,13 @@
         <div
           class="memory-game py-3 py-xl-5"
           :style="{
-            backgroundImage:
-              'url(' + require('../assets/memory_game/background.jpg') + ')',
+            backgroundImage: 'url(' + require('../assets/background.jpg') + ')',
           }"
         >
           <div class="container-xl">
+            <div class="memory-game-header mb-3 mb-xl-5">
+              Find pairs
+            </div>
             <div class="memory-game-div">
               <div
                 v-for="card in cardsArray"
@@ -113,11 +102,23 @@
             </div>
           </div>
         </div>
-        <div class="memory-game-instructions py-3 py-xl-5">
-          <div class="container-xl"></div>
-        </div>
       </div>
     </transition>
+
+    <div class="memory-game-instructions py-3 py-xl-5">
+      <div class="container-xl">
+        <div class="memory-game-instructions-div">
+          <div class="memory-game-instructions-header ">How to play</div>
+          <div class="memory-game-instructions-text ">
+            Pick number of cards you want to play with from rectangles displayed
+            above. Set of cards face down will appear. To flip a card just click
+            on it. If you flip two cards in a row with the same symbol on it,
+            you will get a match and that pair of cards will disappear. To
+            finish the game you have to find all pairs. Goodluck!
+          </div>
+        </div>
+      </div>
+    </div>
 
     <transition name="transition-fade">
       <div v-if="gameFinished" class="modal-overlay">
@@ -158,6 +159,11 @@ export default {
         "fa-moon",
         "fa-rocket",
         "fa-skull",
+        "fa-apple-alt",
+        "fa-atom",
+        "fa-beer",
+        "fa-bell",
+        "fa-car-side",
       ],
       flippedCard: "",
       cardIsFlipped: false,
@@ -279,10 +285,10 @@ export default {
 .memory-game,
 .memory-game-select-number {
   background-color: $primaryGreen;
-  background-blend-mode: multiply;
+  background-blend-mode: darken;
   background-size: cover;
-  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.8),
-    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, 0.5),
+    inset 0px -11px 10px -10px rgba(0, 0, 0, 0.5);
   background-position-y: 55%;
 }
 .memory-game-instructions-text,
@@ -293,13 +299,13 @@ export default {
 }
 .memory-game-select-number-div {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .memory-game-number {
   @include flex-center;
   position: relative;
-  height: 400px;
-  width: calc((100% / 3) - 20px);
+  height: 200px;
+  width: calc((100% / 3) - 10%);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
   transition: all 0.15s ease-in-out;
   background: $primaryGrey;
@@ -308,18 +314,32 @@ export default {
   font-weight: 800;
   cursor: pointer;
   &:hover {
-    background: rgba($primaryGrey, 0.8);
+    background: rgba($primaryGrey, 0.6);
   }
 }
+
+.memory-game-select-number-header,
+.memory-game-header {
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  background: rgba($primaryGrey, 0.6);
+  color: $primaryGreen;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  padding: 10px 20px;
+}
+
 .memory-game-div {
-  padding: 0% 15%;
+  padding: 0% 10%;
 }
 
 .memory-game-card-div {
   position: relative;
   display: inline-block;
-  width: calc((100% / 4) - 2%);
-  height: 180px;
+  width: calc((100% / 6) - 2%);
+  height: 150px;
   margin: 1% 1%;
   perspective: 800px;
 }
@@ -336,6 +356,7 @@ export default {
     background-color: $primaryGrey;
   }
   &.front {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
     background-color: $primaryGreen;
     pointer-events: none;
     &:hover {
@@ -349,7 +370,7 @@ export default {
 }
 
 .memory-game-card-icon {
-  font-size: 80px;
+  font-size: 75px;
   &.back {
     color: $primaryGreen;
   }
@@ -367,7 +388,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 8px;
-  font-size: 120px;
+  font-size: 100px;
   font-weight: 800;
 }
 .correct-match-div {
@@ -424,27 +445,39 @@ export default {
   .memory-game-name {
     margin-top: -10px;
   }
-  .memory-game-div {
-    padding: 0% 10%;
-  }
 }
 @media (max-width: 992px) {
   .memory-game-number {
-    height: 300px;
+    height: 150px;
   }
   .memory-game-div {
-    padding: 5%;
+    padding: 0% 5%;
   }
 }
 @media (max-width: 768px) {
   .memory-game-number {
-    height: 200px;
+    height: 100px;
+    font-size: 40px;
   }
   .memory-game-div {
     padding: 0%;
   }
+  .memory-game-card-div {
+    height: 120px;
+  }
+  .memory-game-card-icon {
+    font-size: 60px;
+  }
+  .correct-match-div,
+  .error-match-div {
+    font-size: 80px;
+  }
 }
 @media (max-width: 576px) {
+  .memory-game-select-number-header,
+  .memory-game-header {
+    font-size: 25px;
+  }
   .memory-game-instructions-header,
   .memory-game-name {
     font-size: 30px;
@@ -455,23 +488,30 @@ export default {
     font-size: 16px;
   }
   .memory-game-number {
-    height: 100px;
-    font-size: 40px;
+    height: 80px;
+    font-size: 30px;
   }
   .memory-game-card-div {
-    height: 150px;
+    height: 80px;
   }
   .memory-game-card-icon {
-    font-size: 50px;
+    font-size: 40px;
   }
   .correct-match-div,
   .error-match-div {
     font-size: 60px;
   }
 }
-@media (max-width: 350px) {
+@media (max-width: 400px) {
   .memory-game-card-div {
-    height: 120px;
+    height: 60px;
+  }
+  .memory-game-card-icon {
+    font-size: 30px;
+  }
+  .correct-match-div,
+  .error-match-div {
+    font-size: 40px;
   }
 }
 </style>

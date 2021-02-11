@@ -18,42 +18,28 @@ $primaryGrey: rgb(100, 100, 100);
   align-items: center;
 }
 
-.text-overflow-ellipsis-1 {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-.text-overflow-ellipsis-2 {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.text-overflow-ellipsis-3 {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+@for $i from 1 to 3 {
+  .text-overflow-ellipsis-#{$i} {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: $i;
+    -webkit-box-orient: vertical;
+  }
 }
 
 .transition-slide-down {
   &-enter {
-    transform: translateY(-100px);
     opacity: 0;
   }
   &-leave-to {
-    transform: translateY(100px);
     opacity: 0;
   }
   &-enter-active {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease-in-out;
   }
   &-leave-active {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease-in-out;
   }
 }
 
@@ -113,16 +99,18 @@ $primaryGrey: rgb(100, 100, 100);
 
 .button {
   @include flex-center;
+  user-select: none;
   position: relative;
   width: 150px;
   height: 50px;
-  border: 2px solid $primaryGrey;
+  border: 1px solid $primaryGrey;
   font-size: 20px;
   text-transform: uppercase;
   color: $primaryGrey;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   letter-spacing: 5px;
+  padding-left: 3px;
   &::after {
     content: "";
     position: absolute;
@@ -149,6 +137,5 @@ $primaryGrey: rgb(100, 100, 100);
   }
   & p {
     z-index: 2;
-    user-select: none;
   }
 }
